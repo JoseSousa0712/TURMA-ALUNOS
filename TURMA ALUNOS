@@ -1,0 +1,98 @@
+import json
+
+def criarTurma():
+    return []
+
+def inserirAluno(turma):
+    nome = input("Digite o nome do aluno: ")
+    aluno_id = input("Digite o ID do aluno: ")
+    notas = input("Digite as notas (TPC, Projeto, Teste) separadas por vírgula: ")
+    notas = [float(nota.strip()) for nota in notas.split(",")]
+    aluno = {"nome": nome, "id": aluno_id, "notas": notas}
+    turma.append(aluno)
+    print(f"Aluno {nome} adicionado com sucesso!")
+    return turma
+
+def listarTurma(turma):
+    if not turma:
+        print("A turma está vazia.")
+    else:
+        print("\nLista de alunos:")
+        for aluno in turma:
+            print(f"ID: {aluno['id']}, Nome: {aluno['nome']}, Notas: {aluno['notas']}")
+
+def consultarAluno(turma):
+    aluno_id = input("Digite o ID do aluno: ")
+    for aluno in turma:
+        if aluno['id'] == aluno_id:
+            print(f"\nAluno encontrado: Nome: {aluno['nome']}, Notas: {aluno['notas']}")
+            return
+    print("Aluno não encontrado.")
+
+def retirarAluno(turma):
+    aluno_id = input("Digite o ID do aluno que deseja remover: ")
+    for i, aluno in enumerate(turma):
+        if aluno['id'] == aluno_id:
+            turma.pop(i)
+            print(f"Aluno {aluno['nome']} (ID: {aluno['id']}) removido com sucesso!")
+            return turma
+    print("Aluno não encontrado.")
+    return turma
+
+def guardarTurma(turma):
+    filename = input("Digite o nome do ficheiro para guardar (ex: turma.json): ")
+    try:
+        with open(filename, "w") as file:
+            json.dump(turma, file, indent=4)
+        print(f"Turma guardada com sucesso no ficheiro '{filename}'.")
+    except Exception as e:
+        print(f"Erro ao guardar a turma: {e}")
+
+def carregarTurma():
+    filename = input("Digite o nome do ficheiro para carregar (ex: turma.json): ")
+    try:
+        with open(filename, "r") as file:
+            turma = json.load(file)
+        print(f"Turma carregada com sucesso do ficheiro '{filename}'.")
+        return turma
+    except Exception as e:
+        print(f"Erro ao carregar a turma: {e}")
+        return []
+
+def menu():
+    turma = criarTurma()
+    while True:
+        print("\nMenu:")
+        print("1: Criar uma turma")
+        print("2: Inserir um aluno na turma")
+        print("3: Listar a turma")
+        print("4: Consultar um aluno por ID")
+        print("5: Retirar um aluno da turma")
+        print("8: Guardar a turma em ficheiro")
+        print("9: Carregar uma turma dum ficheiro")
+        print("0: Sair da aplicação")
+        
+        opcao = input("Escolha uma opção: ")
+        if opcao == "1":
+            turma = criarTurma()
+            print("Nova turma criada.")
+        elif opcao == "2":
+            turma = inserirAluno(turma)
+        elif opcao == "3":
+            listarTurma(turma)
+        elif opcao == "4":
+            consultarAluno(turma)
+        elif opcao == "5":
+            turma = retirarAluno(turma)
+        elif opcao == "8":
+            guardarTurma(turma)
+        elif opcao == "9":
+            turma = carregarTurma()
+        elif opcao == "0":
+            print("Saindo... A turma atual é:")
+            listarTurma(turma)
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+menu()
